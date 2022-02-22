@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -16,6 +17,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @Entity
+//@DynamicInsert // insert 할때 Null 필드는 제외
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +32,10 @@ public class User {
     @Column(nullable = false, length = 50)
     private String email;
 
-    @ColumnDefault("'user'")
-    private String role;
+
+//    @ColumnDefault("user")
+    @Enumerated(EnumType.STRING) // DB 에는 RoleType 이 없어 RoleType 의 저장 타입을 설정
+    private RoleType role;
 
     @CreationTimestamp
     private Timestamp createDate;
