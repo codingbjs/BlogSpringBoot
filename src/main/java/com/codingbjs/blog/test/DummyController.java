@@ -4,6 +4,7 @@ import com.codingbjs.blog.model.RoleType;
 import com.codingbjs.blog.model.User;
 import com.codingbjs.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -66,7 +67,7 @@ public class DummyController {
         return userPage;
     }
 
-    @Transactional // 더티체킹으로 User 객체의 수정이 생기면 자동으로 DB 의 데이터를 수정한다.
+    @Transactional // 더티체킹으로 User 객체의 수정이 생기면 메소드 종료 시점에서 자동으로 DB 에 데이터를 업데이트한다.
     @PutMapping("/dummy/user/{id}")
     public User updateUser(@PathVariable int id, @RequestBody User requestUser){
 
@@ -80,7 +81,19 @@ public class DummyController {
         user.setPassword(requestUser.getPassword());
         user.setEmail(requestUser.getEmail());
 
-        return null;
+//        userRepository.save(user);     @Transactional 을 사용하면 save 할필요없음.
+        return user;
+    }
+
+    @DeleteMapping("/dummy/user/{id}")
+    public String deleteUser (@PathVariable int id) {
+        try {
+            userRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e){
+            return "삭제 실패 id = " + id;
+        }
+
+        return "삭제되었습니다. id = " + id;
     }
 
 }
