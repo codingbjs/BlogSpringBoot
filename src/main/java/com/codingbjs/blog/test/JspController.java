@@ -9,6 +9,6 @@ public class JspController {
 
     @RequestMapping("/get/jsp")
     public String getJsp() {
-        return "test";
+        return "index";
     }
 }
