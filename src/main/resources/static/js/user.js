@@ -19,9 +19,14 @@ let index = {
             contentType: "application/json; charset=utf-8",
             dataType: "json"
         }).done(function (resp) {
-            alert("회원가입이 완료되었습니다.");
-            console.log(resp)
-            location.href = "/blog";
+            if(resp.status === 200) {
+                alert("회원 가입이 완료되었습니다.");
+                location.href = "/blog";
+            }else {
+                console.log(resp)
+                alert("회원 가입 실패\n" +
+                    JSON.stringify(resp));
+            }
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });
